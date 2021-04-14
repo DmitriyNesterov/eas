@@ -34,7 +34,7 @@ class _UsernameInput extends StatelessWidget {
     return TextField(
       key: const Key('loginForm_usernameInput_textField'),
       onChanged: (username) =>
-          {}, //context.read<AuthProvider>().add(LoginUsernameChanged(username)),
+          context.read<UserRepository>().setUsername(username),
       decoration: InputDecoration(
         labelText: 'username',
         //errorText: state.username.invalid ? 'invalid username' : null,
@@ -49,7 +49,7 @@ class _PasswordInput extends StatelessWidget {
     return TextField(
       key: const Key('loginForm_passwordInput_textField'),
       onChanged: (password) =>
-          {}, //context.read<LoginBloc>().add(LoginPasswordChanged(password)),
+          context.read<UserRepository>().setPassword(password),
       obscureText: true,
       decoration: InputDecoration(
         labelText: 'password',
@@ -71,7 +71,7 @@ class _LoginButton extends StatelessWidget {
             onPressed: () => {
                   context
                       .read<UserRepository>()
-                      .login(username: 'din', password: 'AdminEdu')
+                      .login()
                 });
   }
 }

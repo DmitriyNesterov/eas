@@ -1,59 +1,80 @@
 import 'package:dio/dio.dart';
 import 'package:eas/models/api/auth_api.dart';
 import 'package:eas/models/dto/auth_result.dart';
-import 'package:eas/models/dto/operation_result.dart';
 import 'package:eas/models/params/auth_params.dart';
+import 'package:eas/models/repositories/base_repository.dart';
 import 'package:flutter/material.dart';
+
+import '../api/auth_api.dart';
+import '../dto/user.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
-class UserRepository extends ChangeNotifier {
+class UserRepository extends BaseRepository<AuthApi> {
+
   Status _loggedInStatus = Status.Uninitialized;
-
-  BuildContext _context;
-
   Status get loggedInStatus => _loggedInStatus;
 
-  AuthApi _apiRequest;
-  Dio dio;
+  User? _user;
 
-  UserRepository(BuildContext context){
-    _context = context;
-    dio = Dio();
-    _apiRequest = AuthApi(dio);
+  User? getUser() {
+    return _user;
   }
 
-  Future<AuthResult> login(
-      {String username, String password}) async {
+  String _username = "";
+
+  setUsername(String value) {
+    _username = value;
+  }
+
+  String _password = "";
+
+  setPassword(String value) {
+    _password = value;
+  }
+
+
+
+
+  UserRepository(context) : super(context, (Dio d) => AuthApi(d))
+  {
+    getApiClient();
+    //_apiRequest = AuthApi(Dio());
+    _loggedInStatus = Status.Unauthenticated;
+    notifyListeners();
+  }
+
+  void login() async {
     try {
-      username = 'din';
-      password = 'AdminEdu';
+      _username = 'din';
+      _password = 'AdminEdu';
       _loggedInStatus = Status.Authenticating;
       notifyListeners();
-      var result = await _apiRequest.login(AuthParams(username: username, password: password));
+      var result = await apiRequest!
+          .login(AuthParams(username: _username, password: _password));
       var r = AuthResult.fromJson(result.data);
-      if (r != null && r.result == 'OK') {
-
-        dio.options.headers['Authorization'] = 'bearer {r.token}';
+      if (r.result == 'OK') {
+        await storage.write(key: USER_TOKEN, value: r.token);
+        getApiClient();
         _loggedInStatus = Status.Authenticated;
         notifyListeners();
-        return r;
       }
     } catch (e) {
       final snackBar = SnackBar(
         content: Text(e.toString()),
       );
-       ScaffoldMessenger.of(_context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(ctx).showSnackBar(snackBar);
       _loggedInStatus = Status.Unauthenticated;
       notifyListeners();
       return null;
     }
   }
 
-  Future<OperationResult> info() async {
+  void info() async {
     try {
-      var result = await _apiRequest.info();
-      return result;
+      var result = await apiRequest!.info();
+      _user = User.fromJson(result.data);
+      notifyListeners();
     } catch (e) {
       _loggedInStatus = Status.Unauthenticated;
       notifyListeners();
@@ -62,9 +83,9 @@ class UserRepository extends ChangeNotifier {
   }
 
   void logOut() async {
-    _apiRequest.logout();
-    notifyListeners();
+    apiRequest!.logout();
+    storage.delete(key: USER_TOKEN);
     _loggedInStatus = Status.Unauthenticated;
+    notifyListeners();
   }
-
 }

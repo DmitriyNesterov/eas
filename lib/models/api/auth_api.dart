@@ -1,6 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:eas/models/api/auth_apis.dart';
-import 'package:eas/models/dto/auth_result.dart';
 import 'package:eas/models/dto/operation_result.dart';
 import 'package:eas/models/params/auth_params.dart';
 import 'package:retrofit/retrofit.dart';
@@ -10,12 +8,12 @@ part 'auth_api.g.dart';
 abstract class AuthApi {
   factory AuthApi(Dio dio, {String baseUrl}) = _AuthApi;
 
-  @POST(AuthApis.logout)
+  @POST('/logout')
   Future<void> logout();
 
-  @POST(AuthApis.login)
+  @POST('/login')
   Future<OperationResult> login(@Body() AuthParams params);
 
-  @GET(AuthApis.info)
+  @GET('/data')
   Future<OperationResult> info();
 }

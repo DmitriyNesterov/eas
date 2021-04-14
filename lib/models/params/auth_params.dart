@@ -1,5 +1,5 @@
 class AuthParams {
-  AuthParams({this.username, this.password});
+  AuthParams({required this.username, required this.password});
   String username;
   String password;
   factory AuthParams.fromJson(Map<String, dynamic> json) {

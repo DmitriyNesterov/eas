@@ -13,7 +13,7 @@ class _AuthApi implements AuthApi {
 
   final Dio _dio;
 
-  String baseUrl;
+  String? baseUrl;
 
   @override
   Future<void> logout() async {
@@ -40,7 +40,7 @@ class _AuthApi implements AuthApi {
                 .compose(_dio.options, '/login',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = OperationResult.fromJson(_result.data);
+    final value = OperationResult.fromJson(_result.data!);
     return value;
   }
 
@@ -55,7 +55,7 @@ class _AuthApi implements AuthApi {
                 .compose(_dio.options, '/data',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = OperationResult.fromJson(_result.data);
+    final value = OperationResult.fromJson(_result.data!);
     return value;
   }
 
