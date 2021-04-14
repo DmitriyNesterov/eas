@@ -1,7 +1,7 @@
 class OperationResult {
-  dynamic data;
-  List<dynamic> rowData;
-  DataLayerResult result;
+  dynamic? data;
+  List<dynamic>? rowData;
+  DataLayerResult? result;
 
   OperationResult({this.data, this.rowData, this.result});
 
@@ -15,7 +15,7 @@ class OperationResult {
 }
 
 class DataLayerResult {
-  DataLayerResult({this.status, this.code, this.message});
+  DataLayerResult({required this.status, required this.code, required this.message});
   int status;
   int code;
   String message;

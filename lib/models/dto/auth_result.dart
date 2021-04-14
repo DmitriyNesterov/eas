@@ -1,8 +1,10 @@
 class AuthResult {
   String result;
+
+  AuthResult({required this.result, required this.token});
+
   String token;
 
-  AuthResult({this.result, this.token});
   factory AuthResult.fromJson(Map<String, dynamic> parsedJson){
     return AuthResult(
         result:parsedJson['result'],
