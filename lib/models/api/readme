@@ -1,1 +1,3 @@
+после изменения *_api.dart нужно выполнить комнду
 flutter pub run build_runner build
+для создания *_api.g.dart

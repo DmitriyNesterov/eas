@@ -39,7 +39,6 @@ class UserRepository extends BaseRepository<AuthApi> {
   UserRepository(context) : super(context, (Dio d) => AuthApi(d))
   {
     getApiClient();
-    //_apiRequest = AuthApi(Dio());
     _loggedInStatus = Status.Unauthenticated;
     notifyListeners();
   }
