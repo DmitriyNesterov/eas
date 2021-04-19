@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 typedef ItemCreator<T> = T Function(Dio dio);
 
-abstract class BaseRepository<T> extends ChangeNotifier {
+abstract class BaseViewModel<T> extends ChangeNotifier {
   // ignore: non_constant_identifier_names
   final USER_TOKEN = "token";
 
@@ -14,11 +14,16 @@ abstract class BaseRepository<T> extends ChangeNotifier {
 
   T? apiRequest;
 
-  BaseRepository(this.ctx, this.creator);
+  initApi() async {
+    var api = await returnApiClient();
+    apiRequest = api;
+  }
+
+  BaseViewModel(this.ctx, this.creator);
 
   final storage = new FlutterSecureStorage();
 
-  void getApiClient() async {
+  Future<T?> returnApiClient() async {
     var dio = Dio();
     var token = await storage.read(key: USER_TOKEN);
     dio.interceptors.clear();
@@ -31,5 +36,6 @@ abstract class BaseRepository<T> extends ChangeNotifier {
       },
     ));
     apiRequest = creator(dio);
+    return apiRequest;
   }
 }

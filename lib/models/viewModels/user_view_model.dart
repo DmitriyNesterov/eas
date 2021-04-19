@@ -2,15 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:eas/models/api/auth_api.dart';
 import 'package:eas/models/dto/auth_result.dart';
 import 'package:eas/models/params/auth_params.dart';
-import 'package:eas/models/repositories/base_repository.dart';
+import 'package:eas/models/viewModels/base_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/auth_api.dart';
 import '../dto/user.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
-class UserRepository extends BaseRepository<AuthApi> {
+class UserViewModel extends BaseViewModel<AuthApi> {
 
   Status _loggedInStatus = Status.Uninitialized;
   Status get loggedInStatus => _loggedInStatus;
@@ -33,28 +34,34 @@ class UserRepository extends BaseRepository<AuthApi> {
     _password = value;
   }
 
+init() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  _username = preferences.getString('UserName')!;
+  _password = preferences.getString('Password')!;
+  login();
+}
 
 
-
-  UserRepository(context) : super(context, (Dio d) => AuthApi(d))
+  UserViewModel(context) : super(context, (Dio d) => AuthApi(d))
   {
-    getApiClient();
     _loggedInStatus = Status.Unauthenticated;
     notifyListeners();
+    init();
   }
 
   void login() async {
+    await initApi();
     try {
-      _username = 'din';
-      _password = 'AdminEdu';
       _loggedInStatus = Status.Authenticating;
       notifyListeners();
       var result = await apiRequest!
           .login(AuthParams(username: _username, password: _password));
       var r = AuthResult.fromJson(result.data);
       if (r.result == 'OK') {
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.setString('UserName', _username);
+        preferences.setString('Password', _password);
         await storage.write(key: USER_TOKEN, value: r.token);
-        getApiClient();
         _loggedInStatus = Status.Authenticated;
         notifyListeners();
       }
@@ -70,6 +77,7 @@ class UserRepository extends BaseRepository<AuthApi> {
   }
 
   void info() async {
+    await initApi();
     try {
       var result = await apiRequest!.info();
       _user = User.fromJson(result.data);
@@ -82,6 +90,7 @@ class UserRepository extends BaseRepository<AuthApi> {
   }
 
   void logOut() async {
+    await initApi();
     apiRequest!.logout();
     storage.delete(key: USER_TOKEN);
     _loggedInStatus = Status.Unauthenticated;

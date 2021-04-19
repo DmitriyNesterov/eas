@@ -1,27 +1,26 @@
+import 'package:eas/models/viewModels/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../models/repositories/user_repository.dart';
 
 class UserInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    context.read<UserRepository>().info();
+    context.read<UserViewModel>().info();
     return Scaffold(
       appBar: AppBar(
         title: Text("User Info"),
       ),
       body: Center(
-        child: context.read<UserRepository>().getUser() == null
+        child: context.read<UserViewModel>().getUser() == null
             ? const CircularProgressIndicator()
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(context.read<UserRepository>().getUser()!.login),
-                  Text(context.read<UserRepository>().getUser()!.name),
+                  Text(context.read<UserViewModel>().getUser()!.login),
+                  Text(context.read<UserViewModel>().getUser()!.name),
                   ElevatedButton(
                     child: Text("SIGN OUT"),
-                    onPressed: () => context.read<UserRepository>().logOut(),
+                    onPressed: () => context.read<UserViewModel>().logOut(),
                   )
                 ],
               ),

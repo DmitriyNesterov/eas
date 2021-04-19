@@ -1,4 +1,4 @@
-import 'package:eas/models/repositories/user_repository.dart';
+import 'package:eas/models/viewModels/user_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -34,7 +34,7 @@ class _UsernameInput extends StatelessWidget {
     return TextField(
       key: const Key('loginForm_usernameInput_textField'),
       onChanged: (username) =>
-          context.read<UserRepository>().setUsername(username),
+          context.read<UserViewModel>().setUsername(username),
       decoration: InputDecoration(
         labelText: 'username',
         //errorText: state.username.invalid ? 'invalid username' : null,
@@ -49,7 +49,7 @@ class _PasswordInput extends StatelessWidget {
     return TextField(
       key: const Key('loginForm_passwordInput_textField'),
       onChanged: (password) =>
-          context.read<UserRepository>().setPassword(password),
+          context.read<UserViewModel>().setPassword(password),
       obscureText: true,
       decoration: InputDecoration(
         labelText: 'password',
@@ -62,7 +62,7 @@ class _PasswordInput extends StatelessWidget {
 class _LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return context.read<UserRepository>().loggedInStatus ==
+    return context.read<UserViewModel>().loggedInStatus ==
             Status.Authenticating
         ? const CircularProgressIndicator()
         : ElevatedButton(
@@ -70,7 +70,7 @@ class _LoginButton extends StatelessWidget {
             child: const Text('Login'),
             onPressed: () => {
                   context
-                      .read<UserRepository>()
+                      .read<UserViewModel>()
                       .login()
                 });
   }

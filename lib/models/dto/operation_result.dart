@@ -9,7 +9,7 @@ class OperationResult {
     return OperationResult(
         data: parsedJson['data'],
         rowData: parsedJson['rowData'],
-        result: parsedJson['result']
+        result: parsedJson['result']!=null?DataLayerResult.fromJson(parsedJson['result']):null
     );
   }
 }
