@@ -38,4 +38,11 @@ abstract class BaseViewModel<T> extends ChangeNotifier {
     apiRequest = creator(dio);
     return apiRequest;
   }
+
+  void showError(String text){
+    final snackBar = SnackBar(
+      content: Text(text),
+    );
+    ScaffoldMessenger.of(ctx).showSnackBar(snackBar);
+  }
 }

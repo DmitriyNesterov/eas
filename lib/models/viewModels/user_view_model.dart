@@ -66,10 +66,7 @@ init() async {
         notifyListeners();
       }
     } catch (e) {
-      final snackBar = SnackBar(
-        content: Text(e.toString()),
-      );
-      ScaffoldMessenger.of(ctx).showSnackBar(snackBar);
+      showError(e.toString());
       _loggedInStatus = Status.Unauthenticated;
       notifyListeners();
       return null;
@@ -83,6 +80,7 @@ init() async {
       _user = User.fromJson(result.data);
       notifyListeners();
     } catch (e) {
+      showError(e.toString());
       _loggedInStatus = Status.Unauthenticated;
       notifyListeners();
       return null;

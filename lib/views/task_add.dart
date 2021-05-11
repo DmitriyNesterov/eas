@@ -13,20 +13,24 @@ class TaskAdd extends StatelessWidget {
           title: Text("Добавить задачу"),
         ),
         body: Consumer<TaskViewModel>(
-          builder: (context, task, child) => Center(
-            child: Padding(
-              padding: const EdgeInsets.all(50.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _TaskIdInput(),
-                  ElevatedButton(
-                      child: Text("Сохранить"),
-                      onPressed: () {
-                        context.read<TaskViewModel>().add();
-                        Navigator.pop(context);
-                      })
-                ],
+          builder: (context, taskViewModel, child) => Center(
+            child: new WillPopScope(
+              onWillPop: () async => await _onBackPressed(context),
+              child: Padding(
+                padding: const EdgeInsets.all(50.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    _TaskIdInput(),
+                    ElevatedButton(
+                        child: Text("Приступил к задаче"),
+                        onPressed: () {
+                          taskViewModel.setStatus(2).then((value) {
+                            Navigator.pop(context, true);
+                          });
+                        })
+                  ],
+                ),
               ),
             ),
           ),
@@ -34,6 +38,29 @@ class TaskAdd extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<dynamic> _onBackPressed(BuildContext context) {
+  var taskViewModel = context.read<TaskViewModel>();
+  return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Сохранить?"),
+        actions: <Widget>[
+          ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              child: Text("Нет")),
+          ElevatedButton(
+              onPressed: () {
+                taskViewModel.add().then((value) {
+                  Navigator.pop(context, true);
+                });
+              },
+              child: Text("Да"))
+        ],
+      ));
 }
 
 class _TaskIdInput extends StatelessWidget {

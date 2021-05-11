@@ -12,7 +12,7 @@ void main() {
       '/': (BuildContext context) => MainPage(),
       '/add': (BuildContext context) => TaskAdd(),
     },
-      onGenerateRoute: (routeSettings) {
+    onGenerateRoute: (routeSettings) {
       var path = routeSettings.name!.split('/');
       if (path[1] == 'task') {
         return MaterialPageRoute(builder: (context)=>TaskView(id:int.parse(path[2])));

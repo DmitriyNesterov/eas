@@ -2,6 +2,8 @@ import 'package:eas/models/dto/task.dart';
 import 'package:eas/utils/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:eas/models/viewModels/task_view_model.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class TaskCard extends StatelessWidget {
@@ -42,7 +44,7 @@ class TaskCard extends StatelessWidget {
             size: 40,
             color: Colors.black,
           ),
-          onTap: () => Navigator.pushNamed(context, "/task/${task.id}"),
+          onTap: () => Navigator.pushNamed(context, "/task/${task.id}").then((value) => context.read<TaskViewModel>().get(0,true)),
         ));
   }
 }

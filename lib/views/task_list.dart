@@ -1,3 +1,4 @@
+import 'package:eas/models/dto/task.dart';
 import 'package:eas/models/viewModels/task_view_model.dart';
 import 'package:eas/models/viewModels/user_view_model.dart';
 import 'package:eas/views/task_add.dart';
@@ -14,7 +15,8 @@ class TaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<TaskViewModel>().get(0);
+    final taskVm = context.read<TaskViewModel>();
+    taskVm.get(0);
     return Scaffold(
       appBar: AppBar(
           title: Text("Список задач"),
@@ -29,13 +31,13 @@ class TaskList extends StatelessWidget {
             ),
           ]),
       body: RefreshIndicator(
-        onRefresh: () => context.read<TaskViewModel>().get(0),
+        onRefresh: () => taskVm.get(0, true),
         child: ListView.builder(
           //physics: BouncingScrollPhysics(),
           padding: EdgeInsets.all(20),
-          itemCount: context.read<TaskViewModel>().list.length,
+          itemCount: taskVm.list.length,
           itemBuilder: (_, index) => TaskCard(
-            task: context.read<TaskViewModel>().list[index],
+            task: taskVm.list[index],
             dateFormat: dateFormat,
             dateTimeFormat: dateTimeFormat,
           ),
@@ -48,7 +50,7 @@ class TaskList extends StatelessWidget {
           color: Colors.black,
         ),
         onPressed: () {
-          Navigator.pushNamed(context, '/add');
+          Navigator.pushNamed(context, '/add').then((value) => taskVm.get(0,true));
         },
       ),
     );
