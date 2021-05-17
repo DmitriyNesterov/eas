@@ -51,7 +51,7 @@ class TaskViewModel extends BaseViewModel<TaskApi> {
         var l = result.rowData!.map((e) {
           return Task.fromJson(e);
         }).toList();
-        task = l.first;
+        task = (l.length>0) ? l.first : null;
         _list = l;
         notifyListeners();
         _notify = false;
@@ -97,7 +97,7 @@ class TaskViewModel extends BaseViewModel<TaskApi> {
     return _taskId ?? 0;
   }
 
-  Future<void> add() async {
+  Future<int> add() async {
     await initApi();
     LocationData pos = await location.getLocation();
     try {
@@ -107,7 +107,7 @@ class TaskViewModel extends BaseViewModel<TaskApi> {
     } catch (e) {
       showError(e.toString());
       //notifyListeners();
-      return null;
     }
+    return  _taskId ?? 0;
   }
 }

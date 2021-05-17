@@ -26,7 +26,9 @@ class TaskAdd extends StatelessWidget {
                         child: Text("Приступил к задаче"),
                         onPressed: () {
                           taskViewModel.setStatus(2).then((value) {
-                            Navigator.pop(context, true);
+                            Navigator.pushNamed(context, "/task/${value}").then(
+                                    (value) => context.read<TaskViewModel>().get(0,true)
+                            );
                           });
                         })
                   ],
