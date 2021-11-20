@@ -5,8 +5,8 @@ import 'package:eas/models/params/task_status_params.dart';
 import 'package:retrofit/retrofit.dart';
 part 'task_api.g.dart';
 
-//@RestApi(baseUrl: "http://edu-rest.nesterov.me/task")
-@RestApi(baseUrl: "https://restd.ksvz.ru/task")
+@RestApi(baseUrl: "http://edu-rest.nesterov.me/task")
+// @RestApi(baseUrl: "https://restd.ksvz.ru/task")
 
 abstract class TaskApi {
   factory TaskApi(Dio dio, {String baseUrl}) = _TaskApi;
